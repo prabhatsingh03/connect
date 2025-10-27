@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms Hub - Simon Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="https://simonindia.com/favicon.ico">
+    <style>
+        :root {
+            --primary-blue: #0d47a1;
+            --primary-blue-dark: #0b3b84;
+            --primary-blue-light: #1976d2;
+            --accent-orange: #ff6b35;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .header-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .main-bg {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            min-height: 100vh;
+        }
+        
+        .card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(13, 71, 161, 0.1);
+            border-color: var(--primary-blue);
+        }
+        
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-orange));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .form-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .icon-container {
+            transition: all 0.3s ease;
+        }
+        
+        .form-card:hover .icon-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(13, 71, 161, 0.3);
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body class="main-bg">
+
+    <!-- Header -->
+    <header class="header-bg shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold primary-blue">
+                <a href="/" class="flex items-center space-x-3 group">
+                    <img src="https://simonindia.com/assets/images/logo.png" alt="Simon India Logo" class="h-10 w-auto group-hover:scale-110 transition-transform duration-300">
+                    <span class="hidden sm:block text-xl font-bold">Simon Connect</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center space-x-4">
+                <a href="/" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium px-4 py-2 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/software" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium px-4 py-2 rounded-lg hover:bg-gray-50">Software</a>
+                <span class="text-primary-blue font-semibold bg-blue-50 px-4 py-2 rounded-lg">Forms Hub</span>
+                <button id="logoutBtn" class="btn-logout text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="lg:hidden">
+                <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary-blue focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300" aria-label="Toggle mobile menu">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-[60] lg:hidden" style="transform: translateX(100%); visibility: hidden;">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <img src="https://simonindia.com/assets/images/logo.png" alt="Simon India Logo" class="h-8 w-auto">
+                <button id="mobile-menu-close" class="text-gray-600 hover:text-primary-blue focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300" aria-label="Close mobile menu">
+                    <i class="fas fa-times fa-lg"></i>
+                </button>
+            </div>
+            <nav class="space-y-4">
+                <a href="/" class="block text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium py-3 px-4 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/software" class="block text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium py-3 px-4 rounded-lg hover:bg-gray-50">Software</a>
+                <a href="/forms" class="block text-primary-blue font-semibold bg-blue-50 py-3 px-4 rounded-lg">Forms Hub</a>
+                <button id="logoutBtnMobile" class="w-full text-left btn-logout text-white py-3 px-4 rounded-lg font-medium mt-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-[55] lg:hidden hidden"></div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <!-- Welcome Section -->
+        <section class="text-center mb-12 fade-in">
+            <h1 class="text-4xl sm:text-5xl font-extrabold primary-blue mb-4">
+                Forms Hub
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Quick access to all essential company forms and reporting tools
+            </p>
+        </section>
+
+        <!-- Forms Grid -->
+        <section class="mb-16 sm:mb-20">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
+                
+                <!-- Card 1: DLR -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-person-digging text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">DLR</h3>
+                            <p class="text-xs text-gray-500">Daily Labour Report</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Track and monitor daily manpower at construction sites with detailed reporting.</p>
+                    <a href="https://dlr.connect.simonindia.ai/" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- Card 2: DPR -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-chart-simple text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">DPR</h3>
+                            <p class="text-xs text-gray-500">Daily Progress Report</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Monitor project milestones and track daily progress across all activities.</p>
+                    <a href="https://dpr.connect.simonindia.ai/" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- Card 3: Safety Incident Report -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-3">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-triangle-exclamation text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Safety Incident</h3>
+                            <p class="text-xs text-gray-500">Incident Report</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Report and document any safety-related incidents on site for immediate action.</p>
+                    <a href="https://safety-incident.connect.simonindia.ai/" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+                
+                <!-- Card 4: Daily Safety Toolbox Talk -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-4">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-sky-500 to-blue-500 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-person-chalkboard text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Daily Safety Toolbox Talk</h3>
+                            <p class="text-xs text-gray-500">Daily Safety Meeting</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Record details of daily safety meetings and educational talks.</p>
+                    <a href="https://safety-talk.connect.simonindia.ai" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- Card 5: Safe Man Hours -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-1">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-user-clock text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Safe Man Hours</h3>
+                            <p class="text-xs text-gray-500">Safety Tracking</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Track and report cumulative safe man-hours across all projects.</p>
+                    <a href="https://man-hours.connect.simonindia.ai/" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- Card 6: SIL Rain Log -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-2">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-cloud-showers-heavy text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Rain Log</h3>
+                            <p class="text-xs text-gray-500">Weather Tracking</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Log rainfall data and track its impact on project work schedules.</p>
+                    <a href="https://rain-log.connect.simonindia.ai/" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+                
+                <!-- Card 7: Safety Audit & Inspection Report -->
+                <div class="form-card card rounded-2xl overflow-hidden shadow-lg p-6 fade-in stagger-3">
+                    <div class="flex items-center mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-clipboard-check text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800">Safety Audit</h3>
+                            <p class="text-xs text-gray-500">Inspection Report</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6 text-sm leading-relaxed">Comprehensive reports for safety audits and regular inspections.</p>
+                    <a href="https://safety-audit.connect.simonindia.ai/" target="_blank" class="btn-primary text-white py-3 px-4 rounded-xl font-semibold text-center text-sm hover:shadow-lg transition-all duration-300 group block">
+                        Open Form <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-gray-800 to-gray-900 text-white mt-16 sm:mt-20">
+        <div class="container mx-auto px-4 sm:px-6 py-12">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm">&copy; 2025 Simon India Limited. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.style.transform = 'translateX(0)';
+            mobileMenu.style.visibility = 'visible';
+            mobileMenuOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.style.transform = 'translateX(100%)';
+            mobileMenu.style.visibility = 'hidden';
+            mobileMenuOverlay.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Logout functionality
+        async function handleLogout() {
+            try {
+                await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            localStorage.removeItem('access_token');
+            window.location.href = '/';
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('logoutBtnMobile').addEventListener('click', function() {
+            closeMobileMenu();
+            handleLogout();
+        });
+
+        // Check if user is authenticated on page load
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+        });
+    </script>
+</body>
+</html>
+
