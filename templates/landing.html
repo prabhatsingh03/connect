@@ -104,11 +104,16 @@
             </div>
             
             <!-- Desktop Navigation -->
-            <div class="hidden lg:flex items-center space-x-8">
-                <a href="/" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Home</a>
-                <a href="/Application" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Applications Hub</a>
-                <a href="/forms" class="text-primary-blue font-semibold bg-blue-50 px-4 py-2 rounded-lg">Forms Hub</a>
-                <a href="/employee-corner" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium">Employee Corner</a>
+            <div class="hidden lg:flex items-center space-x-4">
+                <a href="/" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Home</a>
+                <a href="/Application" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Applications Hub</a>
+                <a href="/forms" onclick="checkAuthBeforeNav(this, '/forms')" id="forms-hub-nav" class="text-primary-blue font-semibold bg-blue-50 px-3 py-2 rounded-lg hover:bg-blue-100">
+                    <i id="forms-hub-lock-icon" class="fas fa-lock mr-2"></i>Forms Hub
+                </a>
+                <a href="/employee-corner" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">Employee Corner</a>
+                <button id="auth-button" class="text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium px-3 py-2 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-user mr-2"></i><span id="auth-button-text">Login</span>
+                </button>
             </div>
             
             <!-- Mobile Menu Button -->
@@ -132,8 +137,13 @@
             <nav class="space-y-4">
                 <a href="/" class="block text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium py-3 px-4 rounded-lg hover:bg-gray-50">Home</a>
                 <a href="/Application" class="block text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium py-3 px-4 rounded-lg hover:bg-gray-50">Applications Hub</a>
-                <a href="/forms" class="block text-primary-blue font-semibold bg-blue-50 py-3 px-4 rounded-lg">Forms Hub</a>
+                <a href="/forms" onclick="checkAuthBeforeNav(this, '/forms')" id="forms-hub-mobile" class="block text-primary-blue font-semibold bg-blue-50 py-3 px-4 rounded-lg">
+                    <i id="forms-hub-mobile-lock-icon" class="fas fa-lock mr-2"></i>Forms Hub
+                </a>
                 <a href="/employee-corner" class="block text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium py-3 px-4 rounded-lg hover:bg-gray-50">Employee Corner</a>
+                <button id="mobile-auth-button" class="w-full text-left text-gray-600 hover:text-primary-blue transition-colors duration-300 font-medium py-3 px-4 rounded-lg hover:bg-gray-50">
+                    <i class="fas fa-user mr-2"></i><span id="mobile-auth-button-text">Login</span>
+                </button>
             </nav>
         </div>
     </div>
@@ -156,7 +166,7 @@
                     <a href="/Application" class="btn-primary text-white py-4 px-8 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
                         Explore Applications <i class="fas fa-arrow-right ml-2"></i>
                     </a>
-                    <a href="/forms" class="bg-white text-primary-blue py-4 px-8 rounded-xl font-semibold text-lg border-2 border-primary-blue hover:bg-primary-blue hover:text-primary-blue transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <a href="/forms" onclick="checkAuthBeforeNav(this, '/forms')" class="bg-white text-primary-blue py-4 px-8 rounded-xl font-semibold text-lg border-2 border-primary-blue hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl">
                         Browse Forms <i class="fas fa-clipboard-list ml-2"></i>
                     </a>
                 </div>
@@ -185,7 +195,7 @@
             </a>
 
             <!-- Forms Card -->
-            <a href="/forms" class="card rounded-2xl overflow-hidden shadow-xl p-8 cursor-pointer flex flex-col">
+            <div onclick="checkAuthBeforeNav(this, '/forms')" class="card rounded-2xl overflow-hidden shadow-xl p-8 cursor-pointer flex flex-col" style="cursor: pointer;">
                 <div class="flex items-center mb-6">
                     <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mr-4">
                         <i class="fas fa-clipboard-list text-white text-2xl"></i>
@@ -197,10 +207,10 @@
                     Access all essential company forms including DLR, DPR, Safety Reports, and more. Secure login required.
                 </p>
                 
-                <div class="bg-green-600 text-white py-4 px-6 rounded-xl font-semibold text-center">
-                    Browse Forms <i class="fas fa-lock ml-2"></i>
+                <div id="forms-hub-button" class="bg-green-600 text-white py-4 px-6 rounded-xl font-semibold text-center">
+                    Browse Forms <i id="forms-hub-button-icon" class="fas fa-lock ml-2"></i>
                 </div>
-            </a>
+            </div>
 
             <!-- Employee Corner Card -->
             <a href="/employee-corner" class="card rounded-2xl overflow-hidden shadow-xl p-8 cursor-pointer flex flex-col">
@@ -212,11 +222,11 @@
                 </div>
                 
                 <p class="text-gray-700 mb-6 flex-grow leading-relaxed">
-                    Exclusive resources and tools for employees. Coming soon with exciting features and updates.
+                    Access employee resources   , tools & utilities, and stay updated with company news and announcements.
                 </p>
                 
                 <div class="bg-purple-600 text-white py-4 px-6 rounded-xl font-semibold text-center">
-                    Coming Soon <i class="fas fa-hourglass ml-2"></i>
+                    Explore Corner <i class="fas fa-arrow-right ml-2"></i>
                 </div>
             </a>
 
@@ -280,7 +290,70 @@
         </div>
     </footer>
 
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            <!-- Close Button -->
+            <button id="closeLoginModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+
+            <!-- Logo and Header -->
+            <div class="text-center mb-8">
+                <img src="https://simonindia.com/assets/images/logo.png" alt="Simon India Logo" class="h-12 w-auto mx-auto mb-4">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Admin Login</h2>
+                <p class="text-gray-600">Login to access Forms Hub & Post Updates</p>
+            </div>
+
+            <!-- Alert Message -->
+            <div id="alert" class="mb-4 p-4 rounded-lg hidden"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-user mr-2 text-blue-600"></i>Username
+                    </label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        placeholder="Enter admin username"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-lock mr-2 text-blue-600"></i>Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        placeholder="Enter admin password"
+                    >
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="loginSubmitBtn"
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+                >
+                    <span id="loginBtnText">Login</span>
+                    <i id="loginBtnIcon" class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Global authentication state
+        let isAuthenticated = false;
+
         // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -309,9 +382,237 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeMobileMenu();
+                closeLoginModal();
+            }
+        });
+
+        // Login Modal Functions
+        function toggleLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        // Check authentication status
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/check');
+                const data = await response.json();
+                isAuthenticated = data.authenticated;
+                updateAuthUI();
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                isAuthenticated = false;
+                updateAuthUI();
+            }
+        }
+
+        function updateAuthUI() {
+            const authButton = document.getElementById('auth-button-text');
+            const mobileAuthButton = document.getElementById('mobile-auth-button-text');
+            
+            const formsHubNav = document.getElementById('forms-hub-nav');
+            const formsHubMobile = document.getElementById('forms-hub-mobile');
+            const formsHubButton = document.getElementById('forms-hub-button');
+            const lockIcon = document.getElementById('forms-hub-lock-icon');
+            const lockIconMobile = document.getElementById('forms-hub-mobile-lock-icon');
+            const lockIconButton = document.getElementById('forms-hub-button-icon');
+            
+            if (isAuthenticated) {
+                if (authButton) authButton.textContent = 'Logout';
+                if (mobileAuthButton) mobileAuthButton.textContent = 'Logout';
+                
+                // Update Forms Hub to unlocked state
+                if (formsHubNav) {
+                    formsHubNav.classList.remove('bg-blue-50', 'hover:bg-blue-100');
+                    formsHubNav.classList.add('bg-green-50', 'hover:bg-green-100');
+                }
+                if (formsHubMobile) {
+                    formsHubMobile.classList.remove('bg-blue-50');
+                    formsHubMobile.classList.add('bg-green-50');
+                }
+                if (formsHubButton) {
+                    formsHubButton.classList.remove('bg-green-600');
+                    formsHubButton.classList.add('bg-green-500');
+                }
+                if (lockIcon) {
+                    lockIcon.className = 'fas fa-unlock mr-2';
+                }
+                if (lockIconMobile) {
+                    lockIconMobile.className = 'fas fa-unlock mr-2';
+                }
+                if (lockIconButton) {
+                    lockIconButton.className = 'fas fa-unlock ml-2';
+                }
+            } else {
+                if (authButton) authButton.textContent = 'Login';
+                if (mobileAuthButton) mobileAuthButton.textContent = 'Login';
+                
+                // Update Forms Hub to locked state
+                if (formsHubNav) {
+                    formsHubNav.classList.remove('bg-green-50', 'hover:bg-green-100');
+                    formsHubNav.classList.add('bg-blue-50', 'hover:bg-blue-100');
+                }
+                if (formsHubMobile) {
+                    formsHubMobile.classList.remove('bg-green-50');
+                    formsHubMobile.classList.add('bg-blue-50');
+                }
+                if (formsHubButton) {
+                    formsHubButton.classList.remove('bg-green-500');
+                    formsHubButton.classList.add('bg-green-600');
+                }
+                if (lockIcon) {
+                    lockIcon.className = 'fas fa-lock mr-2';
+                }
+                if (lockIconMobile) {
+                    lockIconMobile.className = 'fas fa-lock mr-2';
+                }
+                if (lockIconButton) {
+                    lockIconButton.className = 'fas fa-lock ml-2';
+                }
+            }
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtnText = document.getElementById('loginBtnText');
+            const loginBtnIcon = document.getElementById('loginBtnIcon');
+            const alert = document.getElementById('alert');
+
+            // Update button
+            loginBtnText.textContent = 'Logging in...';
+            loginBtnIcon.className = 'fas fa-spinner fa-spin ml-2';
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Login successful!', 'success');
+                    isAuthenticated = true;
+                    updateAuthUI();
+                    setTimeout(() => {
+                        closeLoginModal();
+                        document.getElementById('loginForm').reset();
+                    }, 1000);
+                } else {
+                    showAlert(data.message || 'Invalid credentials', 'error');
+                    loginBtnText.textContent = 'Login';
+                    loginBtnIcon.className = 'fas fa-arrow-right ml-2';
+                }
+            } catch (error) {
+                showAlert('An error occurred. Please try again.', 'error');
+                loginBtnText.textContent = 'Login';
+                loginBtnIcon.className = 'fas fa-arrow-right ml-2';
+            }
+        });
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `mb-4 p-4 rounded-lg ${type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'}`;
+            alert.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Check auth before navigating to forms
+        function checkAuthBeforeNav(element, url) {
+            event.preventDefault();
+            if (!isAuthenticated) {
+                toggleLoginModal();
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        // Handle auth button click (login/logout)
+        document.getElementById('auth-button')?.addEventListener('click', function(e) {
+            if (isAuthenticated) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Logout logic
+                fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(() => {
+                    isAuthenticated = false;
+                    updateAuthUI();
+                    window.location.reload();
+                }).catch(() => {
+                    isAuthenticated = false;
+                    updateAuthUI();
+                    window.location.reload();
+                });
+            } else {
+                // Open login modal
+                toggleLoginModal();
+            }
+        });
+
+        document.getElementById('mobile-auth-button')?.addEventListener('click', function(e) {
+            closeMobileMenu();
+            
+            if (isAuthenticated) {
+                e.preventDefault();
+                fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(() => {
+                    isAuthenticated = false;
+                    updateAuthUI();
+                    window.location.reload();
+                }).catch(() => {
+                    isAuthenticated = false;
+                    updateAuthUI();
+                    window.location.reload();
+                });
+            } else {
+                toggleLoginModal();
+            }
+        });
+
+        // Close button for login modal
+        document.getElementById('closeLoginModalBtn')?.addEventListener('click', closeLoginModal);
+
+        // Check auth on page load
+        window.addEventListener('load', function() {
+            checkAuth();
+            
+            // Check if login query parameter is present
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('login') === 'true') {
+                toggleLoginModal();
+                // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
     </script>
 
 </body>
 </html>
+
