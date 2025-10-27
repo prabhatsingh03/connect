@@ -16,7 +16,7 @@ jwt = JWTManager(app)
 
 # Load admin credentials from environment variables
 USERS = {
-    os.getenv('ADMIN_USERNAME', 'admin'): os.getenv('ADMIN_PASSWORD', 'admin123')
+    os.getenv('ADMIN_USERNAME', 'admin@simonindia.ai'): os.getenv('ADMIN_PASSWORD', 'admin123')
 }
 
 
@@ -26,10 +26,10 @@ def landing():
     return render_template('landing.html')
 
 
-@app.route('/software')
-def software():
-    """Software page - public access"""
-    return render_template('software.html')
+@app.route('/Application')
+def Application():
+    """Application page - public access"""
+    return render_template('Application.html')
 
 
 @app.route('/employee-corner')
@@ -74,4 +74,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
