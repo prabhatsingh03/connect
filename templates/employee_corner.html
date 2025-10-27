@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Corner - Coming Soon - Simon Connect</title>
+    <title>Employee Corner - Simon Connect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,133 +17,588 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #f8fafc;
         }
 
-        .coming-soon-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .coming-soon-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 32px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-            padding: 60px 40px;
-        }
-
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .float-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+        .section-card {
             transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(13, 71, 161, 0.3);
+        .section-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-card {
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <div class="coming-soon-container">
-        <div class="coming-soon-card">
-            <!-- Logo -->
-            <img src="https://simonindia.com/assets/images/logo.png" alt="Simon India Logo" class="h-16 w-auto mx-auto mb-8">
-
-            <!-- Icon -->
-            <div class="mb-8">
-                <div class="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full pulse-animation">
-                    <i class="fas fa-users text-white text-5xl"></i>
-                </div>
+    <!-- Header -->
+    <div class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <img src="https://simonindia.com/assets/images/logo.png" alt="Simon India Logo" class="h-12 w-auto">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                    Employee Corner
+                </h1>
             </div>
-
-            <!-- Heading -->
-            <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Employee Corner
-            </h1>
-
-            <!-- Subheading -->
-            <p class="text-2xl sm:text-3xl font-bold text-gray-700 mb-6">
-                Coming Soon
-            </p>
-
-            <!-- Description -->
-            <p class="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-                We're working hard to bring you an amazing Employee Corner experience. This space will soon feature exclusive resources, tools, and updates designed just for Simon India employees.
-            </p>
-
-            <!-- Features Preview -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-                <div class="p-4 bg-purple-50 rounded-xl">
-                    <i class="fas fa-user-tie text-purple-600 text-2xl mb-3"></i>
-                    <h3 class="font-semibold text-gray-800 mb-2">Employee Resources</h3>
-                    <p class="text-sm text-gray-600">Access exclusive employee resources</p>
-                </div>
-
-                <div class="p-4 bg-blue-50 rounded-xl">
-                    <i class="fas fa-tools text-blue-600 text-2xl mb-3"></i>
-                    <h3 class="font-semibold text-gray-800 mb-2">Tools & Utilities</h3>
-                    <p class="text-sm text-gray-600">Productivity tools and utilities</p>
-                </div>
-
-                <div class="p-4 bg-indigo-50 rounded-xl">
-                    <i class="fas fa-bullhorn text-indigo-600 text-2xl mb-3"></i>
-                    <h3 class="font-semibold text-gray-800 mb-2">Updates & News</h3>
-                    <p class="text-sm text-gray-600">Stay updated with latest news</p>
-                </div>
-            </div>
-
-            <!-- Divider -->
-            <div class="flex items-center justify-center my-8">
-                <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
-            </div>
-
-            <!-- Back Button -->
-            <a href="/" class="btn-primary text-white py-4 px-8 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center">
-                <i class="fas fa-arrow-left mr-2"></i>Back to Home
+            <a href="/" class="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors">
+                <i class="fas fa-home"></i>
+                <span>Back to Home</span>
             </a>
         </div>
     </div>
 
-    <!-- Floating Elements -->
-    <div class="fixed top-20 left-20 w-20 h-20 bg-white bg-opacity-20 rounded-full blur-xl float-animation"></div>
-    <div class="fixed bottom-20 right-20 w-32 h-32 bg-purple-300 bg-opacity-20 rounded-full blur-xl float-animation" style="animation-delay: 1s;"></div>
-    <div class="fixed top-1/2 right-20 w-24 h-24 bg-blue-300 bg-opacity-20 rounded-full blur-xl float-animation" style="animation-delay: 2s;"></div>
+    <div class="container mx-auto px-6 py-12">
+        <!-- Tabs -->
+        <div class="flex space-x-2 mb-8 border-b border-gray-200">
+            <button onclick="showSection('resources')" class="tab-btn active px-6 py-3 font-semibold text-gray-700 border-b-2 border-purple-600 transition-colors">
+                <i class="fas fa-user-tie mr-2"></i>Employee Resources
+            </button>
+            <button onclick="showSection('tools')" class="tab-btn px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-purple-600 transition-colors">
+                <i class="fas fa-tools mr-2"></i>Tools & Utilities
+            </button>
+            <button onclick="showSection('news')" class="tab-btn px-6 py-3 font-semibold text-gray-500 border-b-2 border-transparent hover:text-purple-600 transition-colors">
+                <i class="fas fa-bullhorn mr-2"></i>Updates & News
+            </button>
+        </div>
 
+        <!-- Employee Resources Section -->
+        <div id="resources-section" class="section-content">
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-12 text-center text-white">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-white bg-opacity-20 rounded-full mb-6">
+                    <i class="fas fa-file-alt text-4xl"></i>
+                </div>
+                <h2 class="text-4xl font-bold mb-4">Employee Resources</h2>
+                <p class="text-xl mb-6 opacity-90">All your essential forms and documents in one place</p>
+                <div class="bg-white bg-opacity-10 rounded-xl p-6 inline-block">
+                    <i class="fas fa-clock text-3xl mb-3"></i>
+                    <p class="text-lg font-semibold">Coming Soon</p>
+                </div>
+                </div>
+            </div>
+
+        <!-- Tools & Utilities Section -->
+        <div id="tools-section" class="section-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Matchify CV Analyzer Card -->
+                <div class="section-card bg-white rounded-2xl shadow-lg overflow-hidden group cursor-pointer">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 p-8 text-white">
+                        <i class="fas fa-search text-4xl mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Matchify</h3>
+                        <p class="opacity-90 text-sm">CV Analyzer & Job Matching Tool</p>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 mb-4 text-sm">Analyze multiple CVs at once and get intelligent scores based on Job Description. The system automatically matches candidates against requirements.</p>
+                        <a href="https://matchify.simonindia.ai/" target="_blank" class="block w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center group">
+                            <span>Access Matchify</span>
+                            <i class="fas fa-external-link-alt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- More Tools Coming Soon -->
+                <div class="section-card bg-gray-50 rounded-2xl shadow-lg border-2 border-dashed border-gray-300 flex items-center justify-center min-h-[300px]">
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-plus-circle text-6xl mb-4"></i>
+                        <p class="text-xl font-semibold">More Tools</p>
+                        <p class="text-sm mt-2">Coming Soon</p>
+                    </div>
+                </div>
+
+                <!-- Placeholder for Future Tools -->
+                <div class="section-card bg-gray-50 rounded-2xl shadow-lg border-2 border-dashed border-gray-300 flex items-center justify-center min-h-[300px]">
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-plus-circle text-6xl mb-4"></i>
+                        <p class="text-xl font-semibold">More Tools</p>
+                        <p class="text-sm mt-2">Coming Soon</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+        <!-- Updates & News Section -->
+        <div id="news-section" class="section-content hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Company Updates & News</h2>
+                <button id="post-update-btn" onclick="openAdminPanel()" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors flex items-center hidden">
+                    <i class="fas fa-plus mr-2"></i>Post Update
+                </button>
+                <button id="login-prompt-btn" onclick="openLoginModalForNews()" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors flex items-center hidden">
+                    <i class="fas fa-lock mr-2"></i>Login to Post Updates
+                </button>
+            </div>
+            <div id="news-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- News cards will be dynamically loaded here -->
+            </div>
+            <div id="no-news" class="text-center py-12 bg-gray-100 rounded-xl">
+                <i class="fas fa-bell text-6xl text-gray-400 mb-4"></i>
+                <p class="text-xl text-gray-600">No updates yet</p>
+            </div>
+        </div>
+            </div>
+
+    <!-- View Post Modal -->
+    <div id="view-modal" class="modal">
+        <div class="modal-content">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white rounded-t-lg flex justify-between items-center">
+                <h3 class="text-2xl font-bold">Post Details</h3>
+                <button onclick="closeViewModal()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-8 overflow-y-auto" style="max-height: 80vh;">
+                <div id="view-image" class="mb-6 hidden"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span id="view-category" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg font-semibold"></span>
+                    <span id="view-date" class="text-gray-500"></span>
+                </div>
+                <h2 id="view-title" class="text-3xl font-bold text-gray-800 mb-6"></h2>
+                <p id="view-content" class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-modal" class="modal" data-edit-post-id="">
+        <div class="modal-content">
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 p-6 text-white rounded-t-lg flex justify-between items-center">
+                <h3 id="admin-modal-title" class="text-2xl font-bold">Create New Post</h3>
+                <button onclick="closeAdminPanel()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="news-form">
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Title</label>
+                        <input type="text" id="post-title" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter post title..." required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                        <select id="post-category" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option>General</option>
+                            <option>HR Announcement</option>
+                            <option>Policy Update</option>
+                            <option>Event</option>
+                            <option>Achievement</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Content</label>
+                        <textarea id="post-content" rows="8" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Write your post content here..." required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-image mr-2"></i>Image (Optional)
+                        </label>
+                        <div class="relative">
+                            <input type="file" id="post-image" accept="image/png,image/jpeg,image/jpg,image/gif" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <div id="image-preview" class="mt-3 hidden">
+                                <img id="preview-img" src="" alt="Preview" class="max-h-48 rounded-lg">
+                                <button type="button" onclick="clearImage()" class="mt-2 text-red-600 hover:text-red-800 text-sm font-semibold">
+                                    <i class="fas fa-times mr-1"></i>Remove Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeAdminPanel()" class="px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                            <i class="fas fa-paper-plane mr-2"></i>Publish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-purple-600', 'text-gray-700');
+                btn.classList.add('text-gray-500', 'border-transparent');
+            });
+
+            // Show selected section
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active', 'border-purple-600', 'text-gray-700');
+            event.target.classList.remove('text-gray-500', 'border-transparent');
+
+            // Load news if showing news section
+            if (section === 'news') {
+                loadNews();
+                checkAuthentication(); // Refresh auth status when switching to news tab
+            }
+        }
+
+
+        // Check authentication status
+        let isAuthenticated = false;
+        let allPostsData = []; // Store all posts for easy access
+
+        async function checkAuthentication() {
+            try {
+                const response = await fetch('/api/auth/check');
+                const data = await response.json();
+                isAuthenticated = data.authenticated;
+                updateAuthButtons();
+            } catch (error) {
+                console.error('Error checking authentication:', error);
+                isAuthenticated = false;
+                updateAuthButtons();
+            }
+        }
+
+        function updateAuthButtons() {
+            const postBtn = document.getElementById('post-update-btn');
+            const loginBtn = document.getElementById('login-prompt-btn');
+            
+            if (isAuthenticated) {
+                postBtn.classList.remove('hidden');
+                loginBtn.classList.add('hidden');
+            } else {
+                postBtn.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
+            }
+        }
+
+        // Admin Panel Functions
+        function openAdminPanel() {
+            if (!isAuthenticated) {
+                alert('Please login to post updates. Redirecting to login page...');
+                window.location.href = '/?login=true';
+                return;
+            }
+            document.getElementById('admin-modal').classList.add('show');
+            document.getElementById('admin-modal').querySelector('.modal-content').classList.add('fade-in');
+        }
+
+        function openLoginModalForNews() {
+            alert('Please login to post updates. Redirecting to login page...');
+            window.location.href = '/?login=true';
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-modal').classList.remove('show');
+            document.getElementById('news-form').reset();
+            clearImagePreview();
+            document.getElementById('admin-modal-title').textContent = 'Create New Post';
+            document.getElementById('admin-modal').setAttribute('data-edit-post-id', '');
+        }
+
+        // Image preview functionality
+        function clearImagePreview() {
+            document.getElementById('post-image').value = '';
+            document.getElementById('image-preview').classList.add('hidden');
+        }
+
+        function clearImage() {
+            clearImagePreview();
+        }
+
+        // Handle image file selection
+        document.getElementById('post-image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-img').src = e.target.result;
+                    document.getElementById('image-preview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // News Form Submission
+        document.getElementById('news-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Double check authentication
+            if (!isAuthenticated) {
+                alert('Please login to post updates.');
+                closeAdminPanel();
+                window.location.href = '/?login=true';
+                return;
+            }
+            
+            const title = document.getElementById('post-title').value;
+            const category = document.getElementById('post-category').value;
+            const content = document.getElementById('post-content').value;
+            const imageFile = document.getElementById('post-image').files[0];
+            const editPostId = document.getElementById('admin-modal').getAttribute('data-edit-post-id');
+
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('category', category);
+            formData.append('content', content);
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+
+            try {
+                let response;
+                if (editPostId) {
+                    // Update existing post
+                    formData.append('post_id', editPostId);
+                    response = await fetch(`/api/news/${editPostId}`, {
+                        method: 'PUT',
+                        body: formData
+                    });
+                } else {
+                    // Create new post
+                    response = await fetch('/api/news', {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    closeAdminPanel();
+                    loadNews();
+                    // Show success message
+                    alert(editPostId ? 'Post updated successfully!' : 'Post created successfully!');
+                } else {
+                    if (response.status === 401) {
+                        alert('Session expired. Please login again.');
+                        window.location.href = '/?login=true';
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Load News
+        async function loadNews() {
+            try {
+                const response = await fetch('/api/news');
+                const data = await response.json();
+
+                const container = document.getElementById('news-container');
+                const noNews = document.getElementById('no-news');
+
+                if (data.posts && data.posts.length > 0) {
+                    noNews.classList.add('hidden');
+                    container.classList.remove('hidden');
+                    
+                    // Store posts data globally for access
+                    allPostsData = data.posts;
+                    
+                    container.innerHTML = data.posts.map(post => {
+                        const categoryColor = getCategoryColor(post.category);
+                        const imageHtml = post.image_path ? `<img src="${post.image_path}" alt="${post.title}" class="w-full h-48 object-cover">` : '';
+                        return `
+                            <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200" data-post-id="${post.id}">
+                                ${imageHtml}
+                                <div class="bg-gradient-to-r ${categoryColor} p-4 text-white">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-semibold uppercase tracking-wide">${post.category}</span>
+                                        <span class="text-xs opacity-90">${new Date(post.timestamp).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-3">${post.title}</h3>
+                                    <p class="text-gray-600 line-clamp-3 mb-4">${post.content}</p>
+                                    <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+                                        <button onclick="viewPost(${post.id})" class="flex items-center text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                                            <i class="fas fa-eye mr-2"></i>View
+                                        </button>
+                                        ${isAuthenticated ? `
+                                            <div class="flex space-x-2">
+                                                <button onclick="editPost(${post.id})" class="flex items-center text-yellow-600 hover:text-yellow-800 font-semibold transition-colors">
+                                                    <i class="fas fa-edit mr-2"></i>Edit
+                                                </button>
+                                                <button onclick="deletePost(${post.id})" class="flex items-center text-red-600 hover:text-red-800 font-semibold transition-colors">
+                                                    <i class="fas fa-trash mr-2"></i>Delete
+                                                </button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.classList.add('hidden');
+                    noNews.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading news:', error);
+            }
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                'General': 'from-gray-500 to-gray-600',
+                'HR Announcement': 'from-purple-500 to-purple-600',
+                'Policy Update': 'from-blue-500 to-blue-600',
+                'Event': 'from-green-500 to-green-600',
+                'Achievement': 'from-yellow-500 to-yellow-600'
+            };
+            return colors[category] || 'from-gray-500 to-gray-600';
+        }
+
+        // Click outside modal to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('admin-modal');
+            if (event.target === modal) {
+                closeAdminPanel();
+            }
+            const viewModal = document.getElementById('view-modal');
+            if (event.target === viewModal) {
+                closeViewModal();
+            }
+        }
+
+        // View Post Function
+        function viewPost(postId) {
+            const post = allPostsData.find(p => p.id === postId);
+            if (!post) return;
+            
+            document.getElementById('view-title').textContent = post.title;
+            document.getElementById('view-category').textContent = post.category;
+            document.getElementById('view-date').textContent = new Date(post.timestamp).toLocaleString();
+            document.getElementById('view-content').textContent = post.content;
+            
+            const imageContainer = document.getElementById('view-image');
+            if (post.image_path) {
+                imageContainer.innerHTML = `<img src="${post.image_path}" alt="${post.title}" class="w-full rounded-lg">`;
+                imageContainer.classList.remove('hidden');
+            } else {
+                imageContainer.classList.add('hidden');
+            }
+            
+            document.getElementById('view-modal').classList.add('show');
+        }
+
+        function closeViewModal() {
+            document.getElementById('view-modal').classList.remove('show');
+        }
+
+        // Edit Post Function
+        function editPost(postId) {
+            if (!isAuthenticated) {
+                alert('Please login to edit posts.');
+                return;
+            }
+            
+            const post = allPostsData.find(p => p.id === postId);
+            if (!post) return;
+            
+            // Populate the admin modal with post data
+            document.getElementById('post-title').value = post.title;
+            document.getElementById('post-category').value = post.category;
+            document.getElementById('post-content').value = post.content;
+            
+            // Change modal title to Edit
+            document.getElementById('admin-modal-title').textContent = 'Edit Post';
+            
+            // Store the post ID for update
+            document.getElementById('admin-modal').setAttribute('data-edit-post-id', postId);
+            
+            openAdminPanel();
+        }
+
+        // Delete Post Function
+        async function deletePost(postId) {
+            if (!isAuthenticated) {
+                alert('Please login to delete posts.');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to delete this post?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/news/${postId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Post deleted successfully!');
+                    loadNews();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Check authentication status
+            checkAuthentication();
+            
+            // Load news if we're on the news section
+            const newsSection = document.getElementById('news-section');
+            if (!newsSection.classList.contains('hidden')) {
+                loadNews();
+            }
+        });
+    </script>
 </body>
 </html>
-
