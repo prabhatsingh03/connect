@@ -369,13 +369,19 @@
         });
 
         // Check if user is authenticated on page load
-        window.addEventListener('load', function() {
-            const token = localStorage.getItem('access_token');
-            if (!token) {
-                window.location.href = '/login';
+        window.addEventListener('load', async function() {
+            try {
+                const response = await fetch('/api/auth/check');
+                const data = await response.json();
+                if (!data.authenticated) {
+                    // Redirect to home with a query parameter to trigger login modal
+                    window.location.href = '/?login=true';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/?login=true';
             }
         });
     </script>
 </body>
 </html>
-
