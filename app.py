@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, send_from_directory
+from flask import Flask, render_template, request, jsonify, session, send_from_directory, Response
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta, datetime
 from dotenv import load_dotenv
@@ -6,16 +6,18 @@ import os
 import sqlite3
 from werkzeug.utils import secure_filename
 import uuid
+import csv
+import io
 
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24))  # Load from .env
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', os.urandom(24))  # Load from .env
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)  # Token expires in 24 hours
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24))
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', os.urandom(24))
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 app.config['UPLOAD_FOLDER'] = 'uploads/images'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB max file size
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 jwt = JWTManager(app)
@@ -27,6 +29,7 @@ USERS = {
 
 # SQLite database setup
 DB_FILE = 'news_posts.db'
+REFERRALS_DB_FILE = 'referrals.db'
 
 def init_db():
     """Initialize the SQLite database"""
@@ -46,6 +49,37 @@ def init_db():
     conn.commit()
     conn.close()
 
+def init_referrals_db():
+    """Initialize the referrals database"""
+    conn = sqlite3.connect(REFERRALS_DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS referrals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            employee_name TEXT NOT NULL,
+            employee_id TEXT NOT NULL,
+            candidate_name TEXT NOT NULL,
+            candidate_email TEXT NOT NULL,
+            candidate_mobile TEXT NOT NULL,
+            position TEXT NOT NULL,
+            department TEXT NOT NULL,
+            experience TEXT NOT NULL,
+            current_company TEXT NOT NULL,
+            current_location TEXT NOT NULL,
+            notice_period TEXT NOT NULL,
+            cv_link TEXT,
+            timestamp TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+def get_referrals_db():
+    """Get database connection for referrals"""
+    conn = sqlite3.connect(REFERRALS_DB_FILE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
 def get_db():
     """Get database connection"""
     conn = sqlite3.connect(DB_FILE)
@@ -56,8 +90,9 @@ def allowed_file(filename):
     """Check if file extension is allowed"""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-# Initialize database and create upload folder
+# Initialize databases and create upload folder
 init_db()
+init_referrals_db()
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
@@ -267,5 +302,118 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
+@app.route('/api/referrals', methods=['GET', 'POST'])
+def referrals():
+    """Handle referrals - GET all referrals (admin only), POST new referral"""
+    if request.method == 'GET':
+        # Check if user is authenticated (admin only)
+        if 'username' not in session or 'access_token' not in session:
+            return jsonify({'success': False, 'message': 'Authentication required'}), 401
+        
+        conn = get_referrals_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM referrals ORDER BY timestamp DESC')
+        rows = cursor.fetchall()
+        conn.close()
+        
+        referrals_list = [dict(row) for row in rows]
+        return jsonify({'success': True, 'referrals': referrals_list})
+    
+    elif request.method == 'POST':
+        try:
+            data = request.json
+            conn = get_referrals_db()
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO referrals (
+                    employee_name, employee_id, candidate_name, candidate_email, 
+                    candidate_mobile, position, department, experience, 
+                    current_company, current_location, notice_period, cv_link, timestamp
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                data.get('employeeName', ''),
+                data.get('employeeId', ''),
+                data.get('candidateName', ''),
+                data.get('candidateEmail', ''),
+                data.get('candidateMobile', ''),
+                data.get('position', ''),
+                data.get('department', ''),
+                data.get('experience', ''),
+                data.get('currentCompany', ''),
+                data.get('currentLocation', ''),
+                data.get('noticePeriod', ''),
+                data.get('cvLink', ''),
+                datetime.now().isoformat()
+            ))
+            conn.commit()
+            conn.close()
+            
+            return jsonify({'success': True, 'message': 'Referral submitted successfully'})
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)}), 500
+
+
+@app.route('/api/referrals/export-excel')
+def export_referrals_excel():
+    """Export referrals as Excel (CSV format) - admin only"""
+    # Check if user is authenticated
+    if 'username' not in session or 'access_token' not in session:
+        return jsonify({'success': False, 'message': 'Authentication required'}), 401
+    
+    try:
+        conn = get_referrals_db()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM referrals ORDER BY timestamp DESC')
+        rows = cursor.fetchall()
+        conn.close()
+        
+        # Create CSV in memory
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow([
+            'Date', 'Employee Name', 'Employee ID', 'Candidate Name', 'Candidate Email',
+            'Candidate Mobile', 'Position', 'Department', 'Years of Experience',
+            'Current Company', 'Current Location', 'Notice Period', 'CV Link'
+        ])
+        
+        # Write data
+        for row in rows:
+            writer.writerow([
+                row['timestamp'],
+                row['employee_name'],
+                row['employee_id'],
+                row['candidate_name'],
+                row['candidate_email'],
+                row['candidate_mobile'],
+                row['position'],
+                row['department'],
+                row['experience'],
+                row['current_company'],
+                row['current_location'],
+                row['notice_period'],
+                row['cv_link'] or ''
+            ])
+        
+        # Prepare response
+        output.seek(0)
+        csv_data = output.getvalue()
+        output.close()
+        
+        # Create response
+        response = Response(
+            csv_data,
+            mimetype='text/csv',
+            headers={'Content-Disposition': f'attachment; filename=referrals_{datetime.now().strftime("%Y%m%d")}.csv'}
+        )
+        
+        return response
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
