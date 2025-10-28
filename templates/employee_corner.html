@@ -87,10 +87,16 @@
                     Employee Corner
                 </h1>
             </div>
-            <a href="/" class="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors">
-                <i class="fas fa-home"></i>
-                <span>Back to Home</span>
-            </a>
+            <div class="flex items-center space-x-4">
+                <button id="logout-btn" onclick="handleLogout()" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center space-x-2 hidden">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+                <a href="/" class="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors">
+                    <i class="fas fa-home"></i>
+                    <span>Back to Home</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -110,18 +116,40 @@
 
         <!-- Employee Resources Section -->
         <div id="resources-section" class="section-content">
-            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-12 text-center text-white">
-                <div class="inline-flex items-center justify-center w-24 h-24 bg-white bg-opacity-20 rounded-full mb-6">
-                    <i class="fas fa-file-alt text-4xl"></i>
-                </div>
-                <h2 class="text-4xl font-bold mb-4">Employee Resources</h2>
-                <p class="text-xl mb-6 opacity-90">All your essential forms and documents in one place</p>
-                <div class="bg-white bg-opacity-10 rounded-xl p-6 inline-block">
-                    <i class="fas fa-clock text-3xl mb-3"></i>
-                    <p class="text-lg font-semibold">Coming Soon</p>
-                </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-8">Employee Resources</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- greytHR Card -->
+                <a href="https://simonindia.greythr.com/v3/portal/ess/home" target="_blank" class="section-card bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg overflow-hidden group cursor-pointer">
+                    <div class="p-8 text-white">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-xl mb-6">
+                            <i class="fas fa-users text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">greytHR</h3>
+                        <p class="opacity-90">Access your employee self-service portal for attendance, leave management, and more.</p>
+                        <div class="mt-6 flex items-center text-white">
+                            <span class="font-semibold mr-2">Access Portal</span>
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Referral Form Card -->
+                <div onclick="openReferralForm()" class="section-card bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg overflow-hidden group cursor-pointer">
+                    <div class="p-8 text-white">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-white bg-opacity-20 rounded-xl mb-6">
+                            <i class="fas fa-user-plus text-3xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Referral Program</h3>
+                        <p class="opacity-90">Refer talented candidates and help us grow. Fill out the referral form to submit your candidate.</p>
+                        <div class="mt-6 flex items-center text-white">
+                            <span class="font-semibold mr-2">Submit Referral</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
         <!-- Tools & Utilities Section -->
         <div id="tools-section" class="section-content hidden">
@@ -139,8 +167,8 @@
                             <span>Access Matchify</span>
                             <i class="fas fa-external-link-alt ml-2"></i>
                         </a>
-                    </div>
                 </div>
+            </div>
 
                 <!-- More Tools Coming Soon -->
                 <div class="section-card bg-gray-50 rounded-2xl shadow-lg border-2 border-dashed border-gray-300 flex items-center justify-center min-h-[300px]">
@@ -183,6 +211,129 @@
         </div>
             </div>
 
+    <!-- Referral Modal -->
+    <div id="referral-modal" class="modal">
+        <div class="modal-content" style="max-width: 95%; max-width: 1200px;">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white rounded-t-lg flex justify-between items-center">
+                <h3 id="referral-modal-title" class="text-2xl font-bold">Employee Referral Form</h3>
+                <button onclick="closeReferralModal()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Admin View: Referrals Table -->
+            <div id="referrals-table-view" class="hidden">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <p class="text-gray-600">All referral submissions</p>
+                    <button onclick="downloadReferralsExcel()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center">
+                        <i class="fas fa-file-excel mr-2"></i>Download as Excel
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto" style="max-height: 70vh;">
+                    <div id="referrals-table-container"></div>
+                </div>
+            </div>
+            
+            <!-- User View: Referral Form -->
+            <div id="referral-form-view">
+                <div class="p-8 overflow-y-auto" style="max-height: 80vh;">
+                    <form id="referral-form" class="space-y-6">
+                    <!-- Referred By Section -->
+                    <div class="bg-blue-50 rounded-lg p-6 mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-user-circle text-blue-600 mr-2"></i>
+                            Referred By (Employee Details)
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Employee Name *</label>
+                                <input type="text" id="emp-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Employee ID *</label>
+                                <input type="text" id="emp-id" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter employee ID">
+                            </div>
+                        </div>
+                </div>
+
+                    <!-- Candidate Details Section -->
+                    <div class="bg-purple-50 rounded-lg p-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-user-check text-purple-600 mr-2"></i>
+                            Candidate Details
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Candidate Full Name *</label>
+                                <input type="text" id="candidate-name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter candidate's full name">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email ID *</label>
+                                    <input type="email" id="candidate-email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="candidate@example.com">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Mobile Number *</label>
+                                    <input type="tel" id="candidate-mobile" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="+91 00000 00000">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Position/Role Applied For *</label>
+                                    <input type="text" id="position" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., Software Engineer">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Department/Team *</label>
+                                    <input type="text" id="department" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., IT, HR">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Years of Relevant Experience *</label>
+                                    <input type="number" id="experience" min="0" step="0.5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., 3.5">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Current Company *</label>
+                                    <input type="text" id="current-company" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Company name">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Current Location *</label>
+                                    <input type="text" id="current-location" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="City, State">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Notice Period *</label>
+                                    <input type="text" id="notice-period" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="e.g., 30 days, 60 days">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    CV/Resume Link (Drive/Dropbox/etc.) <i class="fas fa-external-link-alt ml-2 text-sm"></i>
+                                </label>
+                                <input type="url" id="cv-link" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="https://drive.google.com/file/...">
+                                <p class="text-xs text-gray-500 mt-2 flex items-center">
+                                    <i class="fas fa-info-circle mr-1"></i>
+                                    Ensure the link is publicly accessible (viewable to anyone with the link)
+                                </p>
+                            </div>
+                        </div>
+                </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-end space-x-3 pt-6">
+                        <button type="button" onclick="closeReferralModal()" class="px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                            <i class="fas fa-paper-plane mr-2"></i>Submit Referral
+                        </button>
+                    </div>
+                </form>
+            </div>
+                </div>
+            </div>
+
     <!-- View Post Modal -->
     <div id="view-modal" class="modal">
         <div class="modal-content">
@@ -202,7 +353,7 @@
                 <p id="view-content" class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap"></p>
             </div>
         </div>
-    </div>
+            </div>
 
     <!-- Admin Panel Modal -->
     <div id="admin-modal" class="modal" data-edit-post-id="">
@@ -256,6 +407,7 @@
                         </button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </div>
@@ -307,14 +459,37 @@
         function updateAuthButtons() {
             const postBtn = document.getElementById('post-update-btn');
             const loginBtn = document.getElementById('login-prompt-btn');
+            const logoutBtn = document.getElementById('logout-btn');
             
             if (isAuthenticated) {
                 postBtn.classList.remove('hidden');
                 loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
             } else {
                 postBtn.classList.add('hidden');
                 loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
             }
+        }
+
+        // Handle logout
+        async function handleLogout() {
+            try {
+                await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            
+            isAuthenticated = false;
+            updateAuthButtons();
+            
+            // Reload the page to reset state
+            window.location.reload();
         }
 
         // Admin Panel Functions
@@ -498,6 +673,162 @@
             return colors[category] || 'from-gray-500 to-gray-600';
         }
 
+        // Referral Modal Functions
+        function openReferralForm() {
+            // Check if admin is logged in
+            if (isAuthenticated) {
+                loadReferralsTable();
+            } else {
+                // Show form for regular users
+                showFormView();
+                document.getElementById('referral-modal').classList.add('show');
+            }
+        }
+
+        function closeReferralModal() {
+            document.getElementById('referral-modal').classList.remove('show');
+            document.getElementById('referral-form').reset();
+            showFormView(); // Reset to form view
+        }
+
+        function showTableView() {
+            document.getElementById('referral-form-view').classList.add('hidden');
+            document.getElementById('referrals-table-view').classList.remove('hidden');
+            document.getElementById('referral-modal-title').textContent = 'Employee Referrals - Admin View';
+        }
+
+        function showFormView() {
+            document.getElementById('referral-form-view').classList.remove('hidden');
+            document.getElementById('referrals-table-view').classList.add('hidden');
+            document.getElementById('referral-modal-title').textContent = 'Employee Referral Form';
+        }
+
+        // Load referrals table for admin
+        async function loadReferralsTable() {
+            try {
+                const response = await fetch('/api/referrals');
+                const data = await response.json();
+                
+                if (data.success) {
+                    showTableView();
+                    displayReferralsTable(data.referrals);
+                    document.getElementById('referral-modal').classList.add('show');
+                } else {
+                    alert('Error loading referrals');
+                }
+            } catch (error) {
+                console.error('Error loading referrals:', error);
+                alert('Error loading referrals');
+            }
+        }
+
+        function displayReferralsTable(referrals) {
+            const tableContainer = document.getElementById('referrals-table-container');
+            if (!referrals || referrals.length === 0) {
+                tableContainer.innerHTML = '<p class="text-center text-gray-500 py-8">No referrals found.</p>';
+                return;
+            }
+
+            const tableHTML = `
+                <div class="overflow-x-auto max-h-96">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Experience</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Company</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CV Link</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            ${referrals.map(ref => `
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        ${new Date(ref.timestamp).toLocaleDateString()}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <div class="text-gray-900 font-medium">${ref.employee_name}</div>
+                                        <div class="text-gray-500">ID: ${ref.employee_id}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <div class="text-gray-900 font-medium">${ref.candidate_name}</div>
+                                        <div class="text-gray-500">${ref.candidate_email}</div>
+                                        <div class="text-gray-500">${ref.candidate_mobile}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        ${ref.position}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        ${ref.department}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        ${ref.experience} years
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        ${ref.current_company}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        ${ref.cv_link ? `<a href="${ref.cv_link}" target="_blank" class="text-blue-600 hover:text-blue-800"><i class="fas fa-external-link-alt"></i></a>` : '-'}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        // Download referrals as Excel
+        function downloadReferralsExcel() {
+            window.location.href = '/api/referrals/export-excel';
+        }
+
+        // Handle referral form submission
+        document.getElementById('referral-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const referralData = {
+                employeeName: document.getElementById('emp-name').value,
+                employeeId: document.getElementById('emp-id').value,
+                candidateName: document.getElementById('candidate-name').value,
+                candidateEmail: document.getElementById('candidate-email').value,
+                candidateMobile: document.getElementById('candidate-mobile').value,
+                position: document.getElementById('position').value,
+                department: document.getElementById('department').value,
+                experience: document.getElementById('experience').value,
+                currentCompany: document.getElementById('current-company').value,
+                currentLocation: document.getElementById('current-location').value,
+                noticePeriod: document.getElementById('notice-period').value,
+                cvLink: document.getElementById('cv-link').value
+            };
+
+            try {
+                const response = await fetch('/api/referrals', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(referralData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Referral submitted successfully! Thank you for referring a candidate.');
+                    closeReferralModal();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error submitting referral: ' + error.message);
+            }
+        });
+
         // Click outside modal to close
         window.onclick = function(event) {
             const modal = document.getElementById('admin-modal');
@@ -507,6 +838,10 @@
             const viewModal = document.getElementById('view-modal');
             if (event.target === viewModal) {
                 closeViewModal();
+            }
+            const referralModal = document.getElementById('referral-modal');
+            if (event.target === referralModal) {
+                closeReferralModal();
             }
         }
 
