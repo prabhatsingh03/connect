@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, send_from_directory, Response
+from flask import Flask, render_template, request, jsonify, session, send_from_directory, Response, redirect, url_for
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta, datetime
 from dotenv import load_dotenv
@@ -118,6 +118,39 @@ def employee_corner():
 def forms():
     """Forms page - requires login"""
     return render_template('forms.html')
+
+
+@app.route('/workflows/proton')
+def workflows_proton():
+    # Check authentication
+    if 'username' not in session or 'access_token' not in session:
+        return redirect(url_for('landing', login='true'))
+
+    return render_template('PROTON.html',
+                         favicon_url='https://simonindia.com/favicon.ico',
+                         logo_url='https://simonindia.com/assets/images/logo.png')
+
+
+@app.route('/workflows/sphere')
+def workflows_sphere():
+    # Check authentication
+    if 'username' not in session or 'access_token' not in session:
+        return redirect(url_for('landing', login='true'))
+
+    return render_template('Sphere.html',
+                         favicon_url='https://simonindia.com/favicon.ico',
+                         logo_url='https://simonindia.com/assets/images/logo.png')
+
+
+@app.route('/workflows/smartinv')
+def workflows_smartinv():
+    # Check authentication
+    if 'username' not in session or 'access_token' not in session:
+        return redirect(url_for('landing', login='true'))
+
+    return render_template('smartinv.html',
+                         favicon_url='https://simonindia.com/favicon.ico',
+                         logo_url='https://simonindia.com/assets/images/logo.png')
 
 
 @app.route('/login', methods=['POST'])
