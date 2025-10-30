@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SPHERE ERP - End-to-End User Journey</title>
+  <link rel="icon" href="{{ favicon_url }}">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+  <style>
+    .mermaid { background: #ffffff; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <nav class="bg-white border-b border-slate-200/80 sticky-top">
+		<div class="max-w-5xl mx-auto px-4">
+			<div class="h-16 flex items-center justify-between">
+				<div class="flex items-center gap-3">
+					<img src="{{ logo_url }}" alt="Logo" style="height: 36px;">
+					<strong class="text-slate-900">Workflows</strong>
+				</div>
+				<a href="{{ url_for('employee_corner') }}" class="text-sm font-semibold text-slate-600 hover:text-slate-900">← Back to Employee Corner</a>
+			</div>
+		</div>
+	</nav>
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold mb-2">SPHERE ERP</h1>
+      <p class="text-gray-700">Simple overview of how a person uses the system from start to finish.</p>
+    </header>
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-2">What this system does</h2>
+      <ul class="list-disc pl-6 space-y-1 text-gray-800">
+        <li>Create a request to buy items or services.</li>
+        <li>Send the request for approval based on amount and role.</li>
+        <li>Turn an approved request into a purchase order.</li>
+        <li>Check budget, pick a vendor, and auto fill details.</li>
+        <li>Generate the document and notify the right people.</li>
+        <li>Keep a clear record of every step.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-4">End-to-End user journey</h2>
+      <div class="mermaid">
+flowchart TD
+  A[Open login page] --> B{Have an account}
+  B -- Yes --> C[Enter email and password]
+  B -- No --> S[Sign up with basic details]
+  S --> C
+  C --> D[Login successful]
+  D -- No --> A
+  D -- Yes --> E[See dashboard]
+  E --> E1[See tasks and status]
+  E --> E2[View profile]
+
+  E --> F[Create purchase request]
+  F --> G[Fill request details]
+  G --> H[Attach files if needed]
+  H --> I[Submit for approval]
+
+  I --> J[Approver decision]
+  J -- Reject --> J1[Share reason]
+  J1 --> J2[Edit request]
+  J2 --> I[Submit for approval]
+  J -- Approve --> K[Request is approved]
+
+  K --> L[Generate purchase order]
+  L --> M[Pick vendor and items]
+  M --> N[System checks budget]
+  N --> O{Budget ok}
+  O -- No --> O1[Create NFA note]
+  O1 --> P[Send for higher approval]
+  O -- Yes --> P[Send for approval]
+
+  P --> Q{Amount level}
+  Q -- Low --> Q1[Manager approves]
+  Q -- Medium --> Q2[Head approves]
+  Q -- High --> Q3[CFO or CEO approves]
+  Q1 --> R[Final approval]
+  Q2 --> R
+  Q3 --> R
+
+  R --> T[Make PO document]
+  T --> U[Send email to people]
+  U --> U1[People see alerts]
+  U --> V[PO ready for action]
+  V --> W[Keep records and history]
+  E --> X[Log out]
+  W --> X[Log out]
+      </div>
+      <p class="mt-4 text-gray-700">Notes: The path changes by amount and role. When budget is short, the system asks for an extra note and higher approval.</p>
+    </section>
+
+  </div>
+  <footer class="py-4 border-t border-slate-200 bg-white">
+		<div class="max-w-5xl mx-auto px-4">
+			<p class="text-center text-sm text-slate-500">© Simon India Limited. All Rights Reserved.</p>
+		</div>
+	</footer>
+</body>
+</html>
+
+
